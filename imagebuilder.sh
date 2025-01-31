@@ -216,7 +216,7 @@ download_imagebuilder() {
     download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.${archive_ext}"
 
     echo -e "${INFO} Downloading ImageBuilder from: ${download_file}"
-    curl -fsSOL "${download_file}" || error_msg "Failed to download ${download_file}"
+    curl -sSOL "${download_file}" || error_msg "Failed to download ${download_file}"
 
     # Extract downloaded archive
     echo -e "${INFO} Extracting archive..."
