@@ -439,25 +439,7 @@ custom_packages() {
     echo -e "${SUCCESS} All custom packages successfully downloaded and extracted."
 
 
-    echo "Start AdGuardHome Core Download !"
-    echo "Current Path: $PWD"
-
-    agh_api="https://api.github.com/repos/AdguardTeam/AdGuardHome/releases" 
-    agh_file="AdGuardHome_linux_$ARCH_1"
-    agh_file_down="$(curl -s ${agh_api}/latest | grep "browser_download_url" | grep -oE "https.*${agh_file}.*.tar.gz" | head -n 1)"
-    latest_version=$(curl -sSL "$agh_api/latest" | grep -o 'v[0-9]\+\.[0-9]\+\.[0-9]\+' | head -n 1)
-
-    if wget -nv "$agh_file_down" -P files/opt; then
-        echo "Extracting core"
-    if tar -zxvf files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz -C files/opt; then
-        rm files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz
-        echo "Done! Installed AdGuardHome version $latest_version"
-    else
-        echo "Error: Failed to extract AdGuardHome."
-    fi
-    else
-        echo "Error: Failed to download AdGuardHome."
-    fi
+   
 }
 
 # Add custom packages, lib, theme, app and i18n, etc.
@@ -503,6 +485,27 @@ custom_config() {
     sed -i 's|^export OSH=~/.oh-my-bash|export OSH=/usr/share/oh-my-bash|g' ${custom_files_path}/usr/share/oh-my-bash/.bashrc
     sed -i 's|^OSH_THEME="font"|OSH_THEME="zork"|g' ${custom_files_path}/usr/share/oh-my-bash/.bashrc
     echo -e "${SUCCESS} Oh My Zsh installed successfully."
+
+
+    #Add AdguardHome
+    echo "Start AdGuardHome Core Download !"
+    echo "Current Path: $PWD"
+    agh_api="https://api.github.com/repos/AdguardTeam/AdGuardHome/releases" 
+    agh_file="AdGuardHome_linux_$ARCH_1"
+    agh_file_down="$(curl -s ${agh_api}/latest | grep "browser_download_url" | grep -oE "https.*${agh_file}.*.tar.gz" | head -n 1)"
+    latest_version=$(curl -sSL "$agh_api/latest" | grep -o 'v[0-9]\+\.[0-9]\+\.[0-9]\+' | head -n 1)
+
+    if wget -nv "$agh_file_down" -P files/opt; then
+        echo "Extracting core"
+    if tar -zxvf files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz -C files/opt; then
+        rm files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz
+        echo "Done! Installed AdGuardHome version $latest_version"
+    else
+        echo "Error: Failed to extract AdGuardHome."
+    fi
+    else
+        echo "Error: Failed to download AdGuardHome."
+    fi
 
     # Sync and provide directory status
     sync && sleep 3
