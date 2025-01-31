@@ -356,7 +356,8 @@ custom_packages() {
         "modemmanager|https://downloads.$op_sourse.org/releases/packages-24.10/$ARCH_3/packages"
         "sms-tool|https://downloads.$op_sourse.org/releases/packages-24.10/$ARCH_3/packages"
         "tailscale|https://downloads.$op_sourse.org/releases/packages-24.10/$ARCH_3/packages"
-        
+        "luci-app-adguardhome|https://api.github.com/repos/kongfl888/luci-app-adguardhome/releases/latest"
+
         "python3-speedtest-cli|https://downloads.openwrt.org/releases/packages-$CURVER/$ARCH_3/packages"
         "dns2tcp|https://downloads.immortalwrt.org/releases/packages-$CURVER/$ARCH_3/packages"
         "luci-app-argon-config|https://downloads.immortalwrt.org/releases/packages-$CURVER/$ARCH_3/luci"
@@ -436,6 +437,27 @@ custom_packages() {
     # Sync and provide directory status
     sync && sleep 3
     echo -e "${SUCCESS} All custom packages successfully downloaded and extracted."
+
+
+    echo "Start AdGuardHome Core Download !"
+    echo "Current Path: $PWD"
+
+    agh_api="https://api.github.com/repos/AdguardTeam/AdGuardHome/releases" 
+    agh_file="AdGuardHome_linux_$ARCH_1"
+    agh_file_down="$(curl -s ${agh_api}/latest | grep "browser_download_url" | grep -oE "https.*${agh_file}.*.tar.gz" | head -n 1)"
+    latest_version=$(curl -sSL "$agh_api/latest" | grep -o 'v[0-9]\+\.[0-9]\+\.[0-9]\+' | head -n 1)
+
+    if wget -nv "$agh_file_down" -P files/opt; then
+        echo "Extracting core"
+    if tar -zxvf files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz -C files/opt; then
+        rm files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz
+        echo "Done! Installed AdGuardHome version $latest_version"
+    else
+        echo "Error: Failed to extract AdGuardHome."
+    fi
+    else
+        echo "Error: Failed to download AdGuardHome."
+    fi
 }
 
 # Add custom packages, lib, theme, app and i18n, etc.
@@ -550,7 +572,8 @@ rebuild_firmware() {
     PACKAGES+=" kmod-usb-serial kmod-usb-serial-option unzip tar gzip openssh-sftp-server sms-tool luci-app-temp-status cpusage adb ttyd luci-app-ttyd bash dmesg screen kmod-tun jq luci-lib-ipkg"
     PACKAGES+=" ipset ipt2socks iptables iptables-legacy iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat coreutils coreutils-base64 coreutils-nohup curl dns2socks ip-full libuci-lua lua luci-compat luci-lib-jsonc microsocks resolveip tcping"
 
-
+    #AdGuard Home
+    PACKAGES+=" luci-app-adguardhome ca-certificates ca-bundle tar unzip bind-tools"
     # Modem Tools
     PACKAGES+=" modeminfo luci-app-modeminfo atinout modemband luci-app-modemband sms-tool luci-app-sms-tool-js luci-app-lite-watchdog luci-app-3ginfo-lite picocom minicom"
 
