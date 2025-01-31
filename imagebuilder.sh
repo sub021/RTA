@@ -488,7 +488,7 @@ custom_config() {
 
 
     #Add AdguardHome
-    bash scripts/agh-core.sh
+    #bash scripts/agh-core.sh
 
     # Sync and provide directory status
     sync && sleep 3
