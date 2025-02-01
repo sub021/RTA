@@ -360,7 +360,7 @@ custom_packages() {
         "modemmanager|https://downloads.$op_sourse.org/releases/packages-24.10/$ARCH_3/packages"
         "sms-tool|https://downloads.$op_sourse.org/releases/packages-24.10/$ARCH_3/packages"
         "tailscale|https://downloads.$op_sourse.org/releases/packages-24.10/$ARCH_3/packages"
-        "luci-app-adguardhome|https://api.github.com/repos/kongfl888/luci-app-adguardhome/releases/latest"
+        
 
         "python3-speedtest-cli|https://downloads.openwrt.org/releases/packages-$CURVER/$ARCH_3/packages"
         "dns2tcp|https://downloads.immortalwrt.org/releases/packages-$CURVER/$ARCH_3/packages"
@@ -396,6 +396,32 @@ custom_packages() {
         "luci-app-sms-tool-js|https://downloads.immortalwrt.org/releases/packages-24.10/$ARCH_3/luci"
 
         "luci-app-netspeedtest|https://fantastic-packages.github.io/packages/releases/$CURVER/packages/x86_64/luci"
+    
+    files2+=(
+        "luci-app-adguardhome|https://api.github.com/repos/kongfl888/luci-app-adguardhome/releases/latest"
+    )
+    echo "#########################################"
+    echo "Downloading packages from github releases"
+    echo "#########################################"
+    echo "#"
+    for entry in "${files2[@]}"; do
+    IFS="|" read -r filename2 base_url <<< "$entry"
+    echo "Processing file: $filename2"
+    file_urls=$(curl -s "$base_url" | grep "browser_download_url" | grep -oE "https.*/${filename2}_[_0-9a-zA-Z\._~-]*\.ipk" | sort -V | tail -n 1)
+    for file_url in $file_urls; do
+        if [ ! -z "$file_url" ]; then
+            echo "Downloading $(basename "$file_url")"
+            echo "from $file_url"
+            curl -Lo "packages/$(basename "$file_url")" "$file_url"
+            echo "Packages [$filename2] downloaded successfully!."
+            echo "#"
+            break
+        else
+            echo "Failed to retrieve packages [$filename2] because it's different from $file_url. Retrying before exit..."
+        fi
+    done
+done
+    
     )
 
     download_packages "custom" other_packages[@]
@@ -492,7 +518,7 @@ custom_config() {
 
 
     #Add AdguardHome
-    #bash scripts/agh-core.sh
+    bash scripts/agh-core.sh
 
     # Sync and provide directory status
     sync && sleep 3
