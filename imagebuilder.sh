@@ -448,14 +448,17 @@ custom_packages() {
     echo -e "${SUCCESS} Passwall Packages downloaded successfully."
 
     echo -e "${INFO} Downloading Adguardhome package"
-    curl -fsSOL "${$agh_file_down}" || error_msg "Error: Failed to download Adguardhome package."
-    if tar -zxvf files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz -C files/opt; then
-        rm files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz
-        echo "${SUCCESS} Installed AdGuardHome version $latest_version"
-    else
+    if wget -nv "$agh_file_down" -P files/opt; then
+        echo "${INFO} Extracting core"
+        if tar -zxvf files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz -C files/opt; then
+            rm files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz
+            echo "Done! Installed AdGuardHome version $latest_version"
+        else
         echo "Error: Failed to extract AdGuardHome."
+        fi
+    else
+        echo "Error: Failed to download AdGuardHome."
     fi
-    echo -e "${SUCCESS} Adguardhome Packages downloaded successfully."
 
     # Sync and provide directory status
     sync && sleep 3
