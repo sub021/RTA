@@ -396,7 +396,7 @@ custom_packages() {
         "luci-app-sms-tool-js|https://downloads.immortalwrt.org/releases/packages-24.10/$ARCH_3/luci"
 
         "luci-app-netspeedtest|https://fantastic-packages.github.io/packages/releases/$CURVER/packages/x86_64/luci"
-    
+    {
     files2+=(
         "luci-app-adguardhome|https://api.github.com/repos/kongfl888/luci-app-adguardhome/releases/latest"
     )
@@ -421,7 +421,7 @@ custom_packages() {
         fi
     done
 done
-    
+    }
     )
 
     download_packages "custom" other_packages[@]
