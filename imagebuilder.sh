@@ -345,7 +345,10 @@ custom_packages() {
         echo -e "${INFO} Adding luci-app-amlogic for target Amlogic."
         github_packages+=("luci-app-amlogic|https://api.github.com/repos/ophub/luci-app-amlogic/releases/latest")
     fi
-    github_packages+=("luci-app-alpha-config|https://api.github.com/repos/animegasan/luci-app-alpha-config/releases/latest")
+    github_packages+=(
+        "luci-app-alpha-config|https://api.github.com/repos/animegasan/luci-app-alpha-config/releases/latest"
+        "luci-app-adguardhome|https://api.github.com/repos/kongfl888/luci-app-adguardhome/releases/latest"
+        )
 
     download_packages "github" github_packages[@]
 
@@ -410,9 +413,11 @@ custom_packages() {
         clash_meta=$(meta_api="https://api.github.com/repos/MetaCubeX/mihomo/releases/latest" && meta_file="mihomo-linux-$ARCH_1" && curl -s "${meta_api}" | grep "browser_download_url" | grep -oE "https.*${meta_file}-v[0-9]+\.[0-9]+\.[0-9]+\.gz" | head -n 1)
     fi
     #adguard Home
-    agh_api= "https://api.github.com/repos/kongfl888/luci-app-adguardhome/releases/latest"
-    agh_file_download=$(curl -sL "$agh_api" | grep "browser_download_url" | grep -oE "luci-app-adguardhome_[0-9a-zA-Z\._~-]*\.ipk" | head -n 1)
-
+    agh_api="https://api.github.com/repos/AdguardTeam/AdGuardHome/releases" 
+    agh_file="AdGuardHome_linux_$ARCH_1"
+    agh_file_down="$(curl -s ${agh_api}/latest | grep "browser_download_url" | grep -oE "https.*${agh_file}.*.tar.gz" | head -n 1)"
+    latest_version=$(curl -sSL "$agh_api/latest" | grep -o 'v[0-9]\+\.[0-9]\+\.[0-9]\+' | head -n 1)
+    
     # Mihomo
     mihomo_api="https://api.github.com/repos/rizkikotet-dev/OpenWrt-mihomo-Mod/releases"
     mihomo_file_ipk="mihomo_${ARCH_3}-openwrt-${CURVER}"
@@ -443,7 +448,13 @@ custom_packages() {
     echo -e "${SUCCESS} Passwall Packages downloaded successfully."
 
     echo -e "${INFO} Downloading Adguardhome package"
-    curl -fsSOL "${agh_file_download}" || error_msg "Error: Failed to download Adguardhome package."
+    curl -fsSOL "${$agh_file_down}" || error_msg "Error: Failed to download Adguardhome package."
+    if tar -zxvf files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz -C files/opt; then
+        rm files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz
+        echo "${SUCCESS} Installed AdGuardHome version $latest_version"
+    else
+        echo "Error: Failed to extract AdGuardHome."
+    fi
     echo -e "${SUCCESS} Adguardhome Packages downloaded successfully."
 
     # Sync and provide directory status
