@@ -217,6 +217,7 @@ download_imagebuilder() {
         archive_ext="tar.zst"
     else
         archive_ext="tar.xz"
+    fi
     download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.${archive_ext}"
     echo -e "${INFO} Downloading ImageBuilder from: ${download_file}"
     wget "${download_file}" || error_msg "Failed to download ${download_file}"
