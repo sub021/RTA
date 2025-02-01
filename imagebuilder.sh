@@ -414,7 +414,7 @@ custom_packages() {
     fi
     #adguard Home
     agh_api="https://api.github.com/repos/AdguardTeam/AdGuardHome/releases" 
-    agh_file="AdGuardHome_linux_${ARCH_3}"
+    agh_file="AdGuardHome_linux_${ARCH_1}"
     agh_file_down=$(curl -s "${agh_api}"/latest | grep "browser_download_url" | grep -oE "https.*${agh_file}.*.tar.gz" | head -n 1)
     latest_version=$(curl -sSL "$agh_api/latest" | grep -o 'v[0-9]\+\.[0-9]\+\.[0-9]\+' | head -n 1)
     
@@ -511,7 +511,7 @@ custom_config() {
 
 
     #Add AdguardHome
-    bash scripts/agh-core.sh
+   # bash scripts/agh-core.sh
 
     # Sync and provide directory status
     sync && sleep 3
