@@ -397,7 +397,7 @@ custom_packages() {
         "luci-app-sms-tool-js|https://downloads.immortalwrt.org/releases/packages-24.10/$ARCH_3/luci"
         "luci-app-netspeedtest|https://fantastic-packages.github.io/packages/releases/$CURVER/packages/x86_64/luci"
     )
-    bash script/agh.sh
+    
 
     download_packages "custom" other_packages[@]
 
@@ -409,6 +409,9 @@ custom_packages() {
     else
         clash_meta=$(meta_api="https://api.github.com/repos/MetaCubeX/mihomo/releases/latest" && meta_file="mihomo-linux-$ARCH_1" && curl -s "${meta_api}" | grep "browser_download_url" | grep -oE "https.*${meta_file}-v[0-9]+\.[0-9]+\.[0-9]+\.gz" | head -n 1)
     fi
+    #adguard Home
+    agh_api= "https://api.github.com/repos/kongfl888/luci-app-adguardhome/releases/latest"
+    agh_file_download=$(curl -sL "$agh_api" | grep "browser_download_url" | grep -oE "luci-app-adguardhome_[0-9a-zA-Z\._~-]*\.ipk" | head -n 1)
 
     # Mihomo
     mihomo_api="https://api.github.com/repos/rizkikotet-dev/OpenWrt-mihomo-Mod/releases"
@@ -422,7 +425,7 @@ custom_packages() {
 
 
     # Output download information
-    echo -e "${STEPS} Installing OpenClash, Mihomo And Passwall"
+    echo -e "${STEPS} Installing OpenClash, Mihomo, Passwall And AdguardHome"
 
     echo -e "${INFO} Downloading OpenClash package"
     curl -fsSL -o "${core_dir}/clash_meta.gz" "${clash_meta}" || error_msg "Error: Failed to download Clash Meta package."
@@ -438,6 +441,10 @@ custom_packages() {
     curl -fsSOL "${passwall_file_zip_down}" || error_msg "Error: Failed to download Passwall Zip package."
     unzip -q "passwall_packages_ipk_${ARCH_3}.zip" && rm "passwall_packages_ipk_${ARCH_3}.zip" || error_msg "Error: Failed to extract Passwall package."
     echo -e "${SUCCESS} Passwall Packages downloaded successfully."
+
+    echo -e "${INFO} Downloading Adguardhome package"
+    curl -fsSOL "${agh_file_download}" || error_msg "Error: Failed to download Adguardhome package."
+    echo -e "${SUCCESS} Adguardhome Packages downloaded successfully."
 
     # Sync and provide directory status
     sync && sleep 3
