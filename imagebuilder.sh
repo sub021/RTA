@@ -214,9 +214,8 @@ download_imagebuilder() {
     archive_ext="tar.$([[ "${CURVER}" == "23.05" ]] && echo "xz" || echo "zst")"
     archive_ext="tar.$([[ "${CURVER}" == "23.05" ]] && echo "xz" || [[ "${CURVER}" == "24.10" ]] && echo "zst")"
     download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.${archive_ext}"
-
     echo -e "${INFO} Downloading ImageBuilder from: ${download_file}"
-    curl -sSOL "${download_file}" || error_msg "Failed to download ${download_file}"
+    curl -sSL "${download_file}" || error_msg "Failed to download ${download_file}"
 
     # Extract downloaded archive
     echo -e "${INFO} Extracting archive..."
