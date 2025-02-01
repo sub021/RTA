@@ -212,7 +212,11 @@ download_imagebuilder() {
     # Determine file extension and download URL
     CURVER=$(echo "${op_branch}" | awk -F. '{print $1"."$2}')
     #archive_ext="tar.$([[ "${CURVER}" == "23.05" ]] && echo "xz" || echo "zst")"
-    archive_ext="tar.$([[ "${CURVER}" == "23.05" ]] && echo "xz" || [[ "${CURVER}" == "24.10" ]] && echo "zst")"
+    #archive_ext="tar.$([[ "${CURVER}" == "23.05" ]] && echo "xz" || [[ "${CURVER}" == "24.10" ]] && echo "zst")"
+    if ["$CURVER"== "23.05"];then
+        archive_ext="tar.zst"
+    else
+        archive_ext="tar.xz"
     download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.${archive_ext}"
     echo -e "${INFO} Downloading ImageBuilder from: ${download_file}"
     wget "${download_file}" || error_msg "Failed to download ${download_file}"
