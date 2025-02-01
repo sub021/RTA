@@ -452,12 +452,12 @@ custom_packages() {
         echo "${INFO} Extracting core"
         if tar -zxvf files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz -C files/opt; then
             rm files/opt/AdGuardHome_linux_"$ARCH_1".tar.gz
-            echo "Done! Installed AdGuardHome version $latest_version"
+            echo "${INFO} Installed AdGuardHome version $latest_version"
         else
-        echo "Error: Failed to extract AdGuardHome."
+        echo "${ERROR}Failed to extract AdGuardHome."
         fi
     else
-        echo "Error: Failed to download AdGuardHome."
+        echo "${ERROR} Failed to download AdGuardHome."
     fi
 
     # Sync and provide directory status
